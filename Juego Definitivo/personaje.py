@@ -1,11 +1,15 @@
 import pygame
 from entidad import Entidad
 from constantes import gravedad, fuerza_salto
-import sys
-from pygame.mixer import *
+import os
 
 pygame.mixer.init()
-sonido_salto = pygame.mixer.Sound("audio/salto.mp3")
+
+BASE_DIR = os.path.dirname(__file__)
+def ruta(*caminos):
+    return os.path.join(BASE_DIR, *caminos)
+
+sonido_salto = pygame.mixer.Sound(ruta("audio", "salto.mp3"))
 
 class Personaje(Entidad):
     def __init__(self, x, y, imagen):

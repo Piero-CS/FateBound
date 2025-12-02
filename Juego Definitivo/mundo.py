@@ -1,5 +1,13 @@
 import constantes
 import pygame
+import os
+
+# ================================
+# BASE DIR PARA RUTAS SEGURAS
+# ================================
+BASE_DIR = os.path.dirname(__file__)
+def ruta(*caminos):
+    return os.path.join(BASE_DIR, *caminos)
 
 class Mundo():
     def __init__(self):
@@ -18,12 +26,13 @@ class Mundo():
             for x, tile in enumerate(fila):
                 image_x = x * constantes.tile_size
                 image_y = y * constantes.tile_size
-                if tile >= 0 and tile < len(tile_list):
+
+                if 0 <= tile < len(tile_list):
                     image = tile_list[tile]
                     image_rect = image.get_rect()
                     image_rect.topleft = (image_x, image_y)
 
-                    # Evitar dibujar puertas desde map_tiles, se dibujarán aparte
+                    # No dibujar puertas desde map_tiles
                     if tile not in constantes.puerta:
                         tile_data = [image, image_rect, image_x, image_y]
                         self.map_tiles.append(tile_data)
@@ -43,13 +52,17 @@ class Mundo():
                     self.pos_jugador2 = (image_x, image_y)
 
     def dibujar(self, ventana):
+        # Dibujar tiles normales
         for tile in self.map_tiles:
             ventana.blit(tile[0], tile[1])
 
         # Dibujar puertas restantes
-        puerta_img = pygame.image.load("assets/tiles/tile (12).png")  # Asumiendo que tile (12) es la puerta
-        puerta_img = pygame.transform.scale(puerta_img, (constantes.tile_size, constantes.tile_size))
+        puerta_img = pygame.image.load(
+            ruta("assets", "tiles", "tile (12).png")
+        )
+        puerta_img = pygame.transform.scale(
+            puerta_img, (constantes.tile_size, constantes.tile_size)
+        )
+
         for puerta in self.puertas:
             ventana.blit(puerta_img, puerta)
-
-        
